@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import safeEval from 'safe-eval';
 
+import { USER_EX } from '../constants';
+
 const JSON_FUNCTION_MESSAGE =
   'i-am-a-function__7bf91f73-bed4-44bc-8aed-f5c08d89dc6c';
 const JSON_REGEXP_MESSAGE = 'i-am-regexp__b768715d-4241-482d-b738-bef5ffc2b64f';
@@ -26,56 +28,6 @@ const PTMAP = {
   [DATE]: DATE
 };
 
-const TEMP = {
-  string: 'string',
-  number: 12,
-  object: {
-    '1': 1,
-    '2': [2, 3, 4],
-    '3': {
-      hello: 'you'
-    }
-  },
-  array: [1, 2, '3', 4, { 5: 1, 6: 3 }],
-  func: () => {
-    console.log('func');
-  },
-  regex: /sdsdf'\g/
-};
-
-/**
- * - a better thing to do may be to recursively iterate through
- * the input (object) and store each key/value pair in an object
- * - for instance, TEMP above will become
- * {
- *  string: 'string',
- *  number: 'number',
- *  object: {
- *    '1': 'number',
- *    '2': [
- *      'number',
- *      'number',
- *      'number',
- *    ],
- *    '3': {
- *      hello: 'string',
- *    },
- *  },
- *  array: [
- *    'number',
- *    'number',
- *    'string',
- *    'number',
- *    {
- *      5: 'number',
- *      6: 'number',
- *    }
- *  ],
- *  func: 'function',
- *  regex: 'regexp',
- * }
- */
-
 Function.prototype.toJSON = function() {
   return JSON_FUNCTION_MESSAGE;
 };
@@ -86,8 +38,8 @@ RegExp.prototype.toJSON = function() {
 
 export default class JSONInput extends Component {
   state = {
-    valueAsJS: '',
-    valueAsJSON: '',
+    valueAsJS: USER_EX,
+    valueAsJSON: JSON.stringify(USER_EX, null, 2),
     hasError: false
   };
 
@@ -179,10 +131,7 @@ export default class JSONInput extends Component {
           </div>
         ) : (
           <div>
-            <div>
-              {/* <pre>{JSON.stringify(this.parseValue(), null, 2)}</pre> */}
-              <pre>{JSON.stringify(this.parseValue(valueAsJS), null, 2)}</pre>
-            </div>
+            <pre>{JSON.stringify(this.parseValue(valueAsJS), null, 2)}</pre>
           </div>
         )}
       </div>
